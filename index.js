@@ -1,5 +1,6 @@
 const express = require("express");
 const fetchusers = require("./controllers/fetchusers");
+const fetchgroups = require("./controllers/fetchgroups")
 const authorization = require("./controllers/authorization");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use('/fetchuser',fetchusers);
 app.use("/authorization", authorization);
+app.use("/groupwise",fetchgroups);
 app.listen(3001, () => {
   console.log("App running");
 });

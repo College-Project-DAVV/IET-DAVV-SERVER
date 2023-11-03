@@ -3,31 +3,35 @@ const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
 const DataFetch = require("./dataRecognization");
+const { axios } = require("axios");
 router.post("/", async function main(req, res) {
   // Function to list all users
   async function listUsers(auth) {
     const studentDetails = [];
     const admin = google.admin("directory_v1");
     console.log("Fetching Users ..............");
-    const response = await admin.users.list({
-      auth: auth,
-      customer: "C031kwoqw",
-    }).then((response)=>{
-      const users = response.data.users;
-      console.log("All users fetched successfully");
-      if (users.length === 0) {
-        console.log("No users found.");
-      } else {
-        users.forEach((user) => {
-          studentDetails.push(user);
-        });
-      }
-      const informedData = DataFetch(studentDetails);
-      res.send(informedData);
-    }).catch((err)=>{
-      console.log(err);
-      res.status(404).json(err);
-    })   
+    admin.users
+      .list({
+        auth: auth,
+        customer: "C031kwoqw",
+      })
+      .then((response) => {
+        const users = response.data.users;
+        console.log("All users fetched successfully");
+        if (users.length === 0) {
+          console.log("No users found.");
+        } else {
+          users.forEach((user) => {
+            studentDetails.push(user);
+          });
+        }
+        const informedData = DataFetch(studentDetails);
+        res.send(informedData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(404).json(err);
+      });
   }
   function convertToOAuth2Client(data) {
     //Function to convert token from client into OAuth2Client token
