@@ -2,27 +2,30 @@ const express = require("express");
 const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
-
 router.post("/", async function main(req, res) {
-  // Function to list all users
-  async function FetchGroups(auth) {
+  // Function to list all group members
+  async function FetchGroups(auth,groupid) {
     const admin = google.admin("directory_v1");
-    console.log("Fetching Groups..............");
-    const groups = [];
-    try {
-      const groupsResponse = await admin.groups.list({
-        auth: auth,
-        customer: "C02bprasl",
-      });
-      for (const group of groupsResponse.data.groups) {
-        groups.push({groupEmail:group.email,groupName:group.name,groupDescription:group.description,groupMembersCount:group.directMembersCount});         
-      }
-      return groups;
-    } catch (err) {
-      console.log("Unable to fetch groups");
-      console.log(err);
-      return [];
-    }
+    console.log("Fetching Group Member Details ..............");
+    const groupMembers = [];
+        try {
+            const membersResponse = await admin.members.list({
+              auth:auth,
+              customer: "C02bprasl",
+              groupKey: groupid,
+            });
+            const members = membersResponse.data.members;
+            if (members) {
+              for (const member of members) {
+             groupMembers.push(member);
+              }
+            } else {
+              console.log('No members found in the group.');
+            }
+          } catch (error) {
+            console.error('Error fetching group members:' + error);
+          }
+      return groupMembers;
   }
 
   function convertToOAuth2Client(data) {
@@ -36,15 +39,15 @@ router.post("/", async function main(req, res) {
   }
 
   // Destructuring to token from client
-  const { token } = req.body;
+  const { token,groupid } = req.body;
   // Parsing the string into JSON
-  const parsedToken = JSON.parse(token);
-//const parsedToken = token;
+//   const parsedToken = JSON.parse(token);
+const parsedToken = (token);
   // Converting into OAuth2Client token
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
 
   // Function to fetch all users of Google Workspace
-  FetchGroups(oAuth2ClientInstance)
+  FetchGroups(oAuth2ClientInstance,groupid)
     .then((data) => {
       res.send(data);
     })

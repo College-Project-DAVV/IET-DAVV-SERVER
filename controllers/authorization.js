@@ -8,8 +8,8 @@ router.post("/", async function main(req, res) {
   const queryParameters = querystring.parse(parsedUrl.query);
   async function authorize() {
     const CLIENT_ID =
-      "891307349200-9khqe8cua5pvifevggim1mg6eg6a1cct.apps.googleusercontent.com";
-    const CLIENT_SECRET = "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";
+      "697918735313-nd2tikionjqd2rtsastcke349h0u2al9.apps.googleusercontent.com";
+    const CLIENT_SECRET = "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";
     const REDIRECT_URI = "http://localhost:3000";
     // Create an OAuth2 client with the client ID and client secret
     const oAuth2Client = new google.auth.OAuth2(
