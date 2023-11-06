@@ -2,35 +2,34 @@ const express = require("express");
 const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
-
 router.post("/", async function main(req, res) {
-  // Function to list all users
-  async function FetchGroups(auth) {
+  // Function to list all group members
+  async function FetchCourses(auth, memberid) {
     const admin = google.admin("directory_v1");
-    console.log("Fetching Groups..............");
-    const groups = [];
-    try {
-      const groupsResponse = await admin.groups.list({
-        auth: auth,
-        customer: "C02bprasl",
-      });
-      for (const group of groupsResponse.data.groups) {
-        console.log(group);
-        groups.push({
-          groupEmail: group.email,
-          groupName: group.name,
-          groupDescription: group.description,
-          groupMembersCount: group.directMembersCount,
-        });
-      }
-      return groups;
-    } catch (err) {
-      console.log("Unable to fetch groups");
-      console.log(err);
-      return [];
-    }
-  }
+    console.log("Fetching Courses..............");
+   const studentCourses = [];
 
+    try {
+      const classroom = google.classroom({ version: "v1", auth });
+      const courses = await classroom.courses.list({ studentId: memberid, });
+      if (courses && courses.data && courses.data.courses) {
+        for (const course of courses.data.courses) {
+          studentCourses.push({
+            courseName: course.name,
+            section: course.section,
+            courseDescription: course.descriptionHeading,
+            courseStatus: course.courseState,
+            courseId:course.id
+          });
+        }
+      } else {
+        console.log("No courses found for the user");
+      }
+    } catch (err) {
+      console.log("failed to fetch classroom details");
+    }
+    return studentCourses;
+  }
   function convertToOAuth2Client(data) {
     // Function to convert token from client into OAuth2Client token
     const oAuth2Client = new OAuth2Client();
@@ -42,7 +41,7 @@ router.post("/", async function main(req, res) {
   }
 
   // Destructuring to token from client
-  const { token } = req.body;
+  const {token, memberid} = req.body;
   // Parsing the string into JSON
   const parsedToken = JSON.parse(token);
   //const parsedToken = token;
@@ -50,7 +49,7 @@ router.post("/", async function main(req, res) {
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
 
   // Function to fetch all users of Google Workspace
-  FetchGroups(oAuth2ClientInstance)
+  FetchCourses(oAuth2ClientInstance, memberid)
     .then((data) => {
       res.send(data);
     })

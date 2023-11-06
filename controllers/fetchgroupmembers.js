@@ -13,6 +13,7 @@ router.post("/", async function main(req, res) {
               auth:auth,
               customer: "C02bprasl",
               groupKey: groupid,
+              projection:'full'
             });
             const members = membersResponse.data.members;
             if (members) {
@@ -41,8 +42,8 @@ router.post("/", async function main(req, res) {
   // Destructuring to token from client
   const { token,groupid } = req.body;
   // Parsing the string into JSON
-//   const parsedToken = JSON.parse(token);
-const parsedToken = (token);
+  const parsedToken = JSON.parse(token);
+//const parsedToken = (token);
   // Converting into OAuth2Client token
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
 
