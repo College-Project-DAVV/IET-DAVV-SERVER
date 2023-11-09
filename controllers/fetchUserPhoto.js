@@ -3,7 +3,6 @@ const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
 router.post("/", async function main(req, res) {
-  // Function to list all group members
   function decodeBase64(base64){
     const replace_ = base64.replace(/_/g, '/');
     const replace = replace_.replace(/-/g,'+'); 
@@ -35,7 +34,7 @@ router.post("/", async function main(req, res) {
     return oAuth2Client;
   }
   const { token,memberid } = req.body;
-const parsedToken = (token);
+const parsedToken = JSON.parse(token);
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
   FetchUserPhoto(oAuth2ClientInstance,memberid)
     .then((data) => {

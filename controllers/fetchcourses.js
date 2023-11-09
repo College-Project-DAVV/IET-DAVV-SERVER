@@ -4,14 +4,17 @@ const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
 router.post("/", async function main(req, res) {
   // Function to list all group members
-  async function FetchCourses(auth, memberid) {
+  async function FetchCourses(auth, memberid,designation) {
     const admin = google.admin("directory_v1");
     console.log("Fetching Courses..............");
    const studentCourses = [];
 
     try {
       const classroom = google.classroom({ version: "v1", auth });
-      const courses = await classroom.courses.list({ studentId: memberid, });
+      let payload = {};
+      if(designation==="student")payload={"studentId":memberid};
+      else payload={"teacherId":memberid};
+      const courses = await classroom.courses.list(payload);
       if (courses && courses.data && courses.data.courses) {
         for (const course of courses.data.courses) {
           studentCourses.push({
@@ -39,17 +42,10 @@ router.post("/", async function main(req, res) {
     oAuth2Client.redirectUri = data.redirectUri;
     return oAuth2Client;
   }
-
-  // Destructuring to token from client
-  const {token, memberid} = req.body;
-  // Parsing the string into JSON
+  const {token, memberid,designation} = req.body;
   const parsedToken = JSON.parse(token);
-  //const parsedToken = token;
-  // Converting into OAuth2Client token
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
-
-  // Function to fetch all users of Google Workspace
-  FetchCourses(oAuth2ClientInstance, memberid)
+  FetchCourses(oAuth2ClientInstance, memberid,designation)
     .then((data) => {
       res.send(data);
     })

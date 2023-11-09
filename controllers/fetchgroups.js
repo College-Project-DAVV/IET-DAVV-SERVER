@@ -2,9 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
-
 router.post("/", async function main(req, res) {
-  // Function to list all users
   async function FetchGroups(auth) {
     const admin = google.admin("directory_v1");
     console.log("Fetching Groups..............");
@@ -15,7 +13,6 @@ router.post("/", async function main(req, res) {
         customer: "C02bprasl",
       });
       for (const group of groupsResponse.data.groups) {
-        console.log(group);
         groups.push({
           groupEmail: group.email,
           groupName: group.name,
@@ -40,16 +37,9 @@ router.post("/", async function main(req, res) {
     oAuth2Client.redirectUri = data.redirectUri;
     return oAuth2Client;
   }
-
-  // Destructuring to token from client
   const { token } = req.body;
-  // Parsing the string into JSON
   const parsedToken = JSON.parse(token);
-  //const parsedToken = token;
-  // Converting into OAuth2Client token
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
-
-  // Function to fetch all users of Google Workspace
   FetchGroups(oAuth2ClientInstance)
     .then((data) => {
       res.send(data);
