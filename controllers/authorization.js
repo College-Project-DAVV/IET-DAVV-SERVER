@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config();
 const router = express.Router();
 const { google } = require("googleapis");
 const url = require("url");
@@ -7,10 +8,9 @@ router.post("/", async function main(req, res) {
   const parsedUrl = url.parse(req.url);
   const queryParameters = querystring.parse(parsedUrl.query);
   async function authorize() {
-    const CLIENT_ID =
-      "697918735313-nd2tikionjqd2rtsastcke349h0u2al9.apps.googleusercontent.com";
-    const CLIENT_SECRET = "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";
-    const REDIRECT_URI = "https://iet-davv-student-aggregation-system.netlify.app";
+    const CLIENT_ID =process.env.CLIENT_ID      ;
+    const CLIENT_SECRET =process.env.CLIENT_SECRET;
+    const REDIRECT_URI = process.env.REDIRECT_URI;
     
     // Create an OAuth2 client with the client ID and client secret
     const oAuth2Client = new google.auth.OAuth2(

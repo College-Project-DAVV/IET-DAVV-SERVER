@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
+require('dotenv').config();
 router.post("/", async function main(req, res) {
   // Function to list all group members
+  const CUSTOMER_ID = process.env.CUSTOMER_ID;
   async function FetchGroups(auth,groupid) {
     const admin = google.admin("directory_v1");
     console.log("Fetching Group Member Details ..............");
@@ -11,7 +13,7 @@ router.post("/", async function main(req, res) {
         try {
             const membersResponse = await admin.members.list({
               auth:auth,
-              customer: "C02bprasl",
+              customer: CUSTOMER_ID,
               groupKey: groupid,
               projection:'full'
             });

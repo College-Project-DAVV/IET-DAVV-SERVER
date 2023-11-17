@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
+require('dotenv').config();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
 const DataFetch = require("./dataRecognization");
 const { axios } = require("axios");
 router.post("/", async function main(req, res) {
+  const CUSTOMER_ID = process.env.CUSTOMER_ID;
   // Function to list all users
   async function listUsers(auth) {
     const studentDetails = [];
@@ -13,7 +15,7 @@ router.post("/", async function main(req, res) {
     admin.users
       .list({
         auth: auth,
-        customer: "C02bprasl",
+        customer: CUSTOMER_ID,
         maxResults: 500,
       })
       .then(async (response) => {
@@ -32,7 +34,7 @@ router.post("/", async function main(req, res) {
           try {
             const newResponse = await admin.users.list({
               auth: auth,
-              customer: "C02bprasl",
+              customer: CUSTOMER_ID,
               maxResults: 500,
               pageToken:nextPageToken,
             });

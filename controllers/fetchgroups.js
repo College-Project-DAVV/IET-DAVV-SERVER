@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
+require('dotenv').config();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
 router.post("/", async function main(req, res) {
+  const CUSTOMER_ID = process.env.CUSTOMER_ID;
   async function FetchGroups(auth) {
     const admin = google.admin("directory_v1");
     console.log("Fetching Groups..............");
@@ -10,7 +12,7 @@ router.post("/", async function main(req, res) {
     try {
       const groupsResponse = await admin.groups.list({
         auth: auth,
-        customer: "C02bprasl",
+        customer: CUSTOMER_ID,
       });
       for (const group of groupsResponse.data.groups) {
         groups.push({

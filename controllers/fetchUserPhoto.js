@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
+require('dotenv').config();
 router.post("/", async function main(req, res) {
+  const CUSTOMER_ID = process.env.CUSTOMER_ID;
   function decodeBase64(base64){
     const replace_ = base64.replace(/_/g, '/');
     const replace = replace_.replace(/-/g,'+'); 
@@ -15,7 +17,7 @@ router.post("/", async function main(req, res) {
         try {
             const photo = await admin.users.photos.get({
               auth:auth,
-              customer: "C02bprasl",
+              customer: CUSTOMER_ID,
               userKey: memberid,
             });
            userphoto.imageUrl = decodeBase64(photo.data.photoData);
