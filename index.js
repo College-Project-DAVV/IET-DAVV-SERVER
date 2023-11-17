@@ -10,7 +10,8 @@ const courses = require("./controllers/fetchcourses");
 const courseDetail = require('./controllers/fetchCourseDetails');
 const photo = require('./controllers/fetchUserPhoto')
 const bodyParser = require("body-parser");
-const cors = require("cors");
+const cors = require("cors"); 
+
 const app = express();
 app.use(cors());
 app.use(express.json()); // To parse JSON data in the request body
