@@ -18,6 +18,9 @@ app.use(express.json()); // To parse JSON data in the request body
 app.use(express.urlencoded({ extended: true })); // To parse URL-encoded form data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use("/",()=>{
+  console.log("Server requested for home");
+})
 app.use('/fetchuser',fetchusers);
 app.use("/authorization", authorization);
 app.use("/groups",fetchgroups);
@@ -28,6 +31,6 @@ app.use("/facultydetails",facultydetails);
 app.use("/coursestudents",coursestudents);
 app.use("/coursedetails",courseDetail);
 app.use("/userphoto",photo);
-app.listen(3001, () => {
+app.listen(4813, () => {
   console.log("App running");
 });
