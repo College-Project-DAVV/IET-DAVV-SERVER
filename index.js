@@ -18,9 +18,9 @@ app.use(express.json()); // To parse JSON data in the request body
 app.use(express.urlencoded({ extended: true })); // To parse URL-encoded form data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use("/",(req,res)=>{
-  res.send("Hello");
-})
+// app.use("/",(req,res)=>{
+//   res.send("Hello");
+// })
 app.use('/fetchuser',fetchusers);
 app.use("/authorization", authorization);
 app.use("/groups",fetchgroups);
