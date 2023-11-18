@@ -1,62 +1,31 @@
 const express = require("express");
 const router = express.Router();
+require('dotenv').config();
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
-
 router.post("/", async function main(req, res) {
-  // Function to list all users
+  const CUSTOMER_ID = process.env.CUSTOMER_ID;
   async function FetchGroups(auth) {
     const admin = google.admin("directory_v1");
-    console.log("Fetching Groupwise Details ..............");
-    const groupWiseData = [];
-
+    console.log("Fetching Groups..............");
+    const groups = [];
     try {
       const groupsResponse = await admin.groups.list({
         auth: auth,
-        customer: "C031kwoqw",
+        customer: CUSTOMER_ID,
       });
-
       for (const group of groupsResponse.data.groups) {
-        const membersResponse = await admin.members.list({
-          auth: auth,
-          groupKey: group.id,
+        groups.push({
+          groupEmail: group.email,
+          groupName: group.name,
+          groupDescription: group.description,
+          groupMembersCount: group.directMembersCount,
         });
-
-        const groupObject = {
-          groupName: group,
-          members: [],
-        };
-
-        for (const member of membersResponse.data.members) {
-          const memberDetail = await admin.users.get({
-            auth: auth,
-            userKey: member.id,
-          });
-
-          let userImage = null;
-          try {
-            const image = await admin.users.photos.get({
-              auth: auth,
-              userKey: memberDetail.data.id,
-            });
-                      
-            userImage = image.data.photoData;
-            
-          } catch (err) {
-            // Handle the case when the user's photo is not set
-          }
-
-          groupObject.members.push({
-            email: memberDetail.data.primaryEmail,
-            userImage: userImage,
-          });
-        }
-
-        groupWiseData.push(groupObject);
       }
-      return groupWiseData;
+      return groups;
     } catch (err) {
       console.log("Unable to fetch groups");
+      console.log(err);
       return [];
     }
   }
@@ -70,15 +39,9 @@ router.post("/", async function main(req, res) {
     oAuth2Client.redirectUri = data.redirectUri;
     return oAuth2Client;
   }
-
-  // Destructuring to token from client
   const { token } = req.body;
-  // Parsing the string into JSON
   const parsedToken = JSON.parse(token);
-  // Converting into OAuth2Client token
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
-
-  // Function to fetch all users of Google Workspace
   FetchGroups(oAuth2ClientInstance)
     .then((data) => {
       res.send(data);
@@ -88,5 +51,4 @@ router.post("/", async function main(req, res) {
       res.status(500).send("Error fetching groupWiseData");
     });
 });
-
 module.exports = router;

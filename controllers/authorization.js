@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config();
 const router = express.Router();
 const { google } = require("googleapis");
 const url = require("url");
@@ -7,14 +8,15 @@ router.post("/", async function main(req, res) {
   const parsedUrl = url.parse(req.url);
   const queryParameters = querystring.parse(parsedUrl.query);
   async function authorize() {
-    const CLIENT_ID =
-      "891307349200-9khqe8cua5pvifevggim1mg6eg6a1cct.apps.googleusercontent.com";
-    const CLIENT_SECRET = "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";
-    const REDIRECT_URI = "http://localhost:3000";
+    const CLIENT_ID =process.env.CLIENT_ID      ;
+    const CLIENT_SECRET =process.env.CLIENT_SECRET;
+    const REDIRECT_URI = process.env.REDIRECT_URI;
+    
     // Create an OAuth2 client with the client ID and client secret
     const oAuth2Client = new google.auth.OAuth2(
       CLIENT_ID,
       CLIENT_SECRET,
+
       REDIRECT_URI
     );
     getAccessToken(oAuth2Client);
