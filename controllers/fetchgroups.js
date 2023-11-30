@@ -8,7 +8,7 @@ router.post("/", async function main(req, res) {
   async function FetchGroups(auth) {
     const admin = google.admin("directory_v1");
     console.log("Fetching Groups..............");
-    const groups = [];
+    const groups = [];  
     try {
       const groupsResponse = await admin.groups.list({
         auth: auth,

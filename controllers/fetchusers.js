@@ -73,10 +73,8 @@ router.post("/", async function main(req, res) {
   const { token } = req.body;
   //Parsing the string into JSON
   const parsedToken = JSON.parse(token);
-  // const parsedToken = JSON.parse(token);
   //Converting into OAuth2Client token
   const oAuth2ClientInstance = convertToOAuth2Client(parsedToken);
-  //Function to fetch all users of google workspace
   listUsers(oAuth2ClientInstance);
 });
 module.exports = router;

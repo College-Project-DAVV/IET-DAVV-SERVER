@@ -31,6 +31,6 @@ app.use("/facultydetails",facultydetails);
 app.use("/coursestudents",coursestudents);
 app.use("/coursedetails",courseDetail);
 app.use("/userphoto",photo);
-app.listen(4813, () => {
+app.listen(3001, () => {
   console.log("App running");
 });
