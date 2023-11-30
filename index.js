@@ -8,10 +8,10 @@ const authorization = require("./controllers/authorization");
 const coursestudents = require("./controllers/fetchclassroomStudents");
 const courses = require("./controllers/fetchcourses");
 const courseDetail = require('./controllers/fetchCourseDetails');
+const googleauthback = require("./controllers/authorizationBackend");
 const photo = require('./controllers/fetchUserPhoto')
 const bodyParser = require("body-parser");
 const cors = require("cors"); 
-
 const app = express();
 app.use(cors());
 app.use(express.json()); // To parse JSON data in the request body
@@ -31,6 +31,7 @@ app.use("/facultydetails",facultydetails);
 app.use("/coursestudents",coursestudents);
 app.use("/coursedetails",courseDetail);
 app.use("/userphoto",photo);
+app.use("/googleauth",googleauthback);
 app.listen(3001, () => {
   console.log("App running");
 });
