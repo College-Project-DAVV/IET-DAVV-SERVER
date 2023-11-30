@@ -24,7 +24,7 @@ router.get('/redirect', async (req, res) => {
           if (err) return console.error("Error retrieving access token"+err);
           oAuth2Client.setCredentials(token);
           res.cookie('FetchUserToken',JSON.stringify(oAuth2Client));
-          res.redirect(`http://localhost:3000`);
+          res.redirect(process.env.REDIRECT_CLIENT);
         });
       }
     });
