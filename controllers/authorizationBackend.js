@@ -23,11 +23,12 @@ router.get('/redirect', async (req, res) => {
         oAuth2Client.getToken(code, (err, token) => {
           if (err) return console.error("Error retrieving access token"+err);
           oAuth2Client.setCredentials(token);
-          const expirationDate = new Date();
-          expirationDate.setMinutes(expirationDate.getMinutes() + 100);
+
           res.cookie('FetchUserToken',JSON.stringify(oAuth2Client),{
-            expires:expirationDate,
-            secure: true
+            secure: true,
+            httpOnly: true,
+            path:"/dashboard",
+            maxAge:100000
           });
           res.redirect(process.env.REDIRECT_CLIENT);
         });
