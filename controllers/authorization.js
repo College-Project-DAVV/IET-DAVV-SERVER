@@ -8,10 +8,9 @@ router.post("/", async function main(req, res) {
   const parsedUrl = url.parse(req.url);
   const queryParameters = querystring.parse(parsedUrl.query);
   async function authorize() {
-    const origin = queryParameters.origin;
     const CLIENT_ID =process.env.CLIENT_ID      ;
     const CLIENT_SECRET =process.env.CLIENT_SECRET;
-    const REDIRECT_URI = origin ? process.env.REDIRECT_URI_FACULTY : process.env.REDIRECT_URI;
+    const REDIRECT_URI =process.env.REDIRECT_URI;
     // Create an OAuth2 client with the client ID and client secret
     const oAuth2Client = new google.auth.OAuth2(
       CLIENT_ID,
