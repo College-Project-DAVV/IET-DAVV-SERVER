@@ -26,8 +26,9 @@ router.get('/redirect', async (req, res) => {
 
           res.cookie('FetchUserToken',JSON.stringify(oAuth2Client),{
             secure: true,
+            sameSite:"none",
             httpOnly: true,
-            path:"/dashboard",
+            domain:process.env.REDIRECT_CLIENT,
             maxAge:100000
           });
           res.redirect(process.env.REDIRECT_CLIENT);
