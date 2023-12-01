@@ -26,7 +26,8 @@ router.get('/redirect', async (req, res) => {
           const expirationDate = new Date();
           expirationDate.setMinutes(expirationDate.getMinutes() + 100);
           res.cookie('FetchUserToken',JSON.stringify(oAuth2Client),{
-            expires:expirationDate
+            expires:expirationDate,
+            secure: true
           });
           res.redirect(process.env.REDIRECT_CLIENT);
         });
