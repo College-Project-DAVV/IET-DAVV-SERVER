@@ -13,7 +13,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors"); 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*',
+}));
 app.use(express.json()); // To parse JSON data in the request body
 app.use(express.urlencoded({ extended: true })); // To parse URL-encoded form data
 app.use(bodyParser.urlencoded({ extended: true }));
